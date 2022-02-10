@@ -59,4 +59,6 @@ interface UpdateView {
         }
     }
     fun onGetAppVersionUnsuccessfully(message: String, state: Boolean)
+    fun showProgressBar()
+    fun hideProgressBar()
 }

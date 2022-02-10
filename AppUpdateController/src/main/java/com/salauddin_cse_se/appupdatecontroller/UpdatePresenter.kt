@@ -12,6 +12,7 @@ import java.io.IOException
 
 class UpdatePresenter(val updateView: UpdateView) {
     private val client: OkHttpClient = OkHttpClient()
+
     fun getAppVersion(
         tableName: String,
         appName: String,
@@ -21,6 +22,7 @@ class UpdatePresenter(val updateView: UpdateView) {
         activity: Activity,
         vCode: Int
     ) {
+        updateView.showProgressBar()
         val query = "SELECT * FROM $tableName WHERE APP_NAME='$appName'"
         try {
             client.newCall(Common.getResponse(token, connString, baseUrl, query))
@@ -30,8 +32,8 @@ class UpdatePresenter(val updateView: UpdateView) {
                             ConstantString.NETWORK_ERROR,
                             false
                         )
+                        updateView.hideProgressBar()
                     }
-
                     override fun onResponse(call: Call, response: Response) {
                         if (response.isSuccessful && response.body != null) {
                             try {
@@ -53,10 +55,13 @@ class UpdatePresenter(val updateView: UpdateView) {
                                 )
                             }
                         }
+                        updateView.hideProgressBar()
                     }
                 })
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             updateView.onGetAppVersionUnsuccessfully(ConstantString.NETWORK_ERROR, false)
+            updateView.hideProgressBar()
         }
     }
 }
