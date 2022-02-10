@@ -1,1 +1,1 @@
-# App update controller
+# AppUpdateController
